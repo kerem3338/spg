@@ -10,9 +10,9 @@ SPG uses '*blocks*' for holding predefined text sources
 | `__version__`| Contains version information
 
 When generating document output SPG goes each line for determining *line mode*
-**if a line starts with '\*' and ends with '\*\*' line is interpreted as a *command line*
+if a line starts with '\*' and ends with '\*\*' line is interpreted as a *command line*
 a *command line* should always return a string to generated documents source.
-** if the line is not a *command line*, the content of the line is written to document output
+ if the line is not a *command line*, the content of the line is written to document output
 
 ## *Command Line*
 A command line have two parts a `command_name` and `argument`.
