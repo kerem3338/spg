@@ -1,0 +1,6 @@
+0*setblock:title**
+#  Hello From SPG!
+*endblock:title**
+
+*writeblock:title**
+*writeblock:__info__**

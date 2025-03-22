@@ -1,0 +1,6 @@
+*setblock:title**
+<h1> Hello From SPG! </h1>
+*endblock:title**
+
+*writeblock:title**
+*writeblock:__info__**

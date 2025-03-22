@@ -1,0 +1,6 @@
+*setblock:title*
+Hello World!
+*endblock:title**
+
+*writeblock:title**
+*writeblock:__info__**
