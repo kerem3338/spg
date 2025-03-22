@@ -152,7 +152,8 @@ class Document {
                 blocks[argument] = Block("", true);
                 current_block = argument;
                 return "";
-            case "endblock":
+
+			case "endblock":
                 check_empty_arg("endblock", argument, c_line);
                 if (!(argument in blocks)) {
                     line_error(format("endblock: block '%s' is not defined before", argument), c_line);
@@ -161,7 +162,7 @@ class Document {
                 blocks[argument].ended = true;
                 current_block = "";
                 return "";
-			
+
 			case "writeblock":
                 check_empty_arg("writeblock", argument, c_line);
                 if (!(argument in blocks)) {
