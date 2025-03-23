@@ -17,11 +17,34 @@ spg --version
 
 ## Features
 * Defining blocks
-* Writing to 3 diffrent output type. 
+* Writing to 3 different output type.
+* Somewhat useful web server
 
-## Planned Features
-- [ ] variables
-- [ ] importing blocks from another file
+## Using The Server
+### Building
+```shell
+make build_server
+```
+or
+```shell
+make just_build_server
+```
+if you already builded spg executable
+
+### Running
+simply run the server executable.
+
+    spg_server.exe
+    
+**To check server information you can visit `/__server_info__`**
+
+*NOTE*: If requested file is contains errors server will be closed with error code.
+*NOTE*: Server is designed for debugging or small testing.
+
+## Planned Features / Things
+- [ ] Variables
+- [ ] Importing blocks from another file
+- [ ] The web server should not exit entirely when an error occurs.
 
 ## Example Syntax
 
