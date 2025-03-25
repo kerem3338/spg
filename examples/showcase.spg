@@ -1,0 +1,22 @@
+-- This is comment line
+*setblock:license**
+SPG (Simple Page Generator) is licensed under MIT License
+*endblock:license**
+
+%{big_text}Simple Page Generator{big_text_end}
+%{italic} {bold}NOTE{bold_end} This file is only work for HTML output type. {italic_end}
+
+%{nw} {bold}
+*writeblock:license**
+%{nw} {bold_end} {nw}
+
+<b>All Blocks</b>: 
+*writeallblocks:, **
+
+%{hr}
+%{big_text}Version{big_text_end}
+*writeblock:__version__**
+
+%{hr}
+%{big_text}More Information{big_text_end}
+*writeblock:__info__**

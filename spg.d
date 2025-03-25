@@ -85,16 +85,6 @@ void main(string[] args) {
 	if (output_file_arg != "") {
 		output_file = output_file_arg;
 	}
-
-	
-	if (output_type_arg != "") {
-		try {
-		output_type = to!OutputType(output_type_arg);
-		} catch (Exception e){
-			error(format("Unable to set output type '%s': %s",output_type_arg,e.msg));
-		}
-	}
-	
 	
     
 	if (source_arg.startsWith("\"") && source_arg.endsWith("\"")){
@@ -109,6 +99,14 @@ void main(string[] args) {
 		output_type = get_output_type(source_arg);
 		if (output_file_arg == "") {
 		  output_file = stripExtension(baseName(source_arg));
+		}
+	}
+
+	if (output_type_arg != "") {
+		try {
+		output_type = to!OutputType(output_type_arg);
+		} catch (Exception e){
+			error(format("Unable to set output type '%s': %s",output_type_arg,e.msg));
 		}
 	}
 

@@ -42,6 +42,13 @@ enum OutputType {
 	TXT
 }
 
+enum LineType {
+    COMMAND,
+    NORMAL,
+    COMMENT,
+    MAGIC
+}
+
 struct Error {
   int line_no;
   string message;
@@ -59,6 +66,15 @@ OutputType[string] output_type_extensions = [
    ".txt.spg": OutputType.TXT
 ];
 
+string[string] output_type_content_types = [
+    ".md": "text/markdown",
+    ".md.spg": "text/markdown",
+    ".html": "text/html",
+    ".html.spg": "text/html",
+    ".txt": "text/plain",
+    ".txt.spg": "text/plain"
+];
+
 const string __info__ = format(`{big_text}SPG{big_text_end}
 
 SPG Version '%.3f', {bold}Simple Page Generator{bold_end} is a simple page generation tool from Zoda (https://github.com/kerem3338)
@@ -72,6 +88,23 @@ OutputType get_output_type(string filename){
 	}
   }
   return default_output_type;
+}
+
+string get_file_extension(string filename){
+    string ext;
+    bool append_ext = false;
+
+    foreach (char ch; filename) {
+        if (ch == '.' && !(append_ext)) {
+            append_ext = true;
+        }
+
+        if (append_ext) {
+            ext ~= ch;
+        }
+    }
+
+    return ext;
 }
 
 bool check_value_arg(string arg_name,string[] args) {
@@ -117,33 +150,46 @@ string replace_all(string input, string[string] replace_array) {
     }
     return input;
 }
-string generate_info(OutputType output_type){
-	string new_info = __info__;
-	switch (output_type){
-		case OutputType.MARKDOWN, OutputType.TXT:
-			string[string] replacements = [
-				"{big_text}": "# ",
-				"{big_text_end}": "",
-				"{bold}": "**",
-				"{bold_end}": "**",
-			];
-			new_info = replace_all(new_info,replacements);
-			break;
-		case OutputType.HTML:
-			string[string] replacements = [
-				"{big_text}": "<h1>",
-				"{big_text_end}": "</h1>",
-				"{bold}": "<b>",
-				"{bold_end}": "</b>"
-			];
-			new_info = replace_all(new_info,replacements);
-			break;
-		default:
-			error(format("Output type '%s' is not a valid type (as we know).",output_type));
-			break;
-	}
-	return new_info;
+
+string replace_magics(string source,OutputType output_type) {
+    string output;
+    switch (output_type){
+        case OutputType.MARKDOWN, OutputType.TXT:
+            string[string] replacements = [
+                "{big_text}": "# ",
+                "{big_text_end}": "",
+                "{bold}": "**",
+                "{bold_end}": "**",
+                "{hr}": "---",
+                "{nw}": "\n",
+                "{italic}": "*",
+                "{italic_end}": "*"
+            ];
+            output = replace_all(source,replacements);
+            break;
+        case OutputType.HTML:
+            string[string] replacements = [
+                "{big_text}": "<h1>",
+                "{big_text_end}": "</h1>",
+                "{bold}": "<b>",
+                "{bold_end}": "</b>",
+                "{hr}": "<hr>",
+                "{nw}": "<br>",
+                "{italic}": "<i>",
+                "{italic_end}": "</i>"
+            ];
+            output = replace_all(source,replacements);
+            break;
+        default:
+            error(format("Output type '%s' is not a valid type (as we know).",output_type));
+            break;
+    }
+    return output;
 }
+string generate_info(OutputType output_type) {
+	return replace_magics(__info__,output_type);
+}
+
 void check_empty_arg(string command_name, string arg, int line) {
     if (strip(arg).length == 0) {
         error(format("[At Line %d ] Command '%s' requires non-empty argument content", line + 1, command_name));
@@ -188,6 +234,9 @@ class Document {
                 blocks[argument] = Block("", true);
                 current_block = argument;
 				return "";
+            
+            case "nothing":
+                return "";
 
 			case "endblock":
                 check_empty_arg("endblock", argument, c_line);
@@ -198,8 +247,21 @@ class Document {
                 blocks[argument].ended = true;
                 current_block = "";
                 return "";
+			
+            case "writeallblocks":
+                string seperator = ",";
+                string blocks_output;
 
-			case "writeblock":
+                if (strip(argument).length != 0) {
+                    seperator = argument;
+                }
+
+                foreach (string block_name, Block value; blocks) {
+                    blocks_output ~= block_name ~ seperator;
+                }
+                return blocks_output;
+
+            case "writeblock":
                 check_empty_arg("writeblock", argument, c_line);
                 if (!(argument in blocks)) {
                     line_error(format("writeblock: block '%s' is not defined before", argument), c_line);
@@ -217,20 +279,44 @@ class Document {
 		// Predefined blocks
 		blocks["__info__"] = Block(generate_info(output_type));
 		blocks["__version__"] = Block(__version__.to!string);
+        
 		
         int c_line = 0;
         while (c_line < lines.length) {
+            LineType line_type = LineType.NORMAL;
             string line_content = this.lines[c_line];
             string safe_line = strip(line_content);
 			
             if (safe_line.startsWith("*") && safe_line.endsWith("**")) {	
-			  _out ~= handle_command(c_line, safe_line);
-            } else {
-                if (current_block.length > 0 && blocks[current_block].can_append) {
-                    blocks[this.current_block].content ~= line_content ~ "\n";
-                } else {
-                    _out ~= line_content ~ "\n";
-                }
+                line_type = LineType.COMMAND;
+            } else if(line_content.startsWith("--")) {
+                line_type = LineType.COMMENT;
+            } else if(line_content.startsWith("%")) {
+                line_content = line_content[1..$];
+                line_type = LineType.MAGIC;
+            }else {
+                line_type = LineType.NORMAL;
+            }
+
+            switch (line_type) {
+                case LineType.COMMAND:
+                    _out ~= handle_command(c_line, safe_line);
+                    break;
+                case LineType.COMMENT:
+                    // Do nothing
+                    break;
+                case LineType.MAGIC:
+                    _out  ~= replace_magics(line_content,output_type) ~ "\n";
+                    break;
+                case LineType.NORMAL:
+                    if (current_block.length > 0 && blocks[current_block].can_append) {
+                        blocks[this.current_block].content ~= line_content ~ "\n";
+                    } else {
+                        _out ~= line_content ~ "\n";
+                    }
+                    break;
+                default:
+                    line_error(format("Unkown LineType %s",line_type),c_line);
             }
             c_line++;
         }

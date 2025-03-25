@@ -45,6 +45,7 @@ simply run the server executable.
 - [ ] Variables
 - [ ] Importing blocks from another file
 - [ ] The web server should not exit entirely when an error occurs.
+- [ ] Conditional commands
 
 ## Example Syntax
 

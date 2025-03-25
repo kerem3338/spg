@@ -20,7 +20,7 @@ build:
 just_build_server:
 	dmd spg_lib.d spg_server.d -of=$(server_executable_name) -I.
 
-build_server: build
+build_server:
 	dmd spg_lib.d spg_server.d -of=$(server_executable_name) -I.
 
 build_all: build build_server
