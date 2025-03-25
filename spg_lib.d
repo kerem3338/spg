@@ -55,7 +55,7 @@ struct Error {
 }
 
 const OutputType default_output_type = OutputType.TXT;
-const float __version__ = 0.11;
+const float __version__ = 0.12;
 const string __author__ = "Zoda (kerem3338)";
 OutputType[string] output_type_extensions = [
    ".md": OutputType.MARKDOWN,

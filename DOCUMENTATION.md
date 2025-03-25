@@ -33,7 +33,7 @@ The Magic Line mechanism allows flexible formatting depending on the output type
 A command line have two parts a `command_name` and `argument`.
 command name and argument is needs to be seperated by a `:`
 
-**valid commands for version 0.11 is listed below**
+**valid commands for version 0.12 is listed below**
 
 | Commmand Name  | Argument Required       | Information                                   |
 | -------------- | ----------------------- | --------------------------------------------- |
@@ -44,7 +44,7 @@ command name and argument is needs to be seperated by a `:`
 | writeallblocks | Optional, a seperator   | Writes all defined block names                |
 ## Output Types
 
-**valid output types for version 0.1 is listed below**
+**valid output types for version 0.12 is listed below**
 
 | Type Name | extension(s)     | Information   |
 | --------- | ---------------- | ------------- |
@@ -54,7 +54,7 @@ command name and argument is needs to be seperated by a `:`
 
 ## Magics
 
-**valid magics for version 0.11 is listed below**
+**valid magics for version 0.12 is listed below**
 
 | Magic Value    | Description            | Supported Output Types |
 | -------------- | ---------------------- | ---------------------- |
