@@ -35,13 +35,14 @@ command name and argument is needs to be seperated by a `:`
 
 **valid commands for version 0.12 is listed below**
 
-| Commmand Name  | Argument Required       | Information                                   |
-| -------------- | ----------------------- | --------------------------------------------- |
-| setblock       | Yes, a valid block name | For starting the 'content setting' of a block |
-| endblock       | Yes, a valid block name | For ending the 'content setting' of a block   |
-| writeblock     | Yes, a valid block name | For writing content of a block to output      |
-| nothing        | No                      | Does nothing.                                 |
-| writeallblocks | Optional, a seperator   | Writes all defined block names                |
+| Commmand Name  | Argument Required                | Information                                   |
+| -------------- | -------------------------------- | --------------------------------------------- |
+| setblock       | Yes, a valid block name          | For starting the 'content setting' of a block |
+| endblock       | Yes, a valid block name          | For ending the 'content setting' of a block   |
+| writeblock     | Yes, a valid block name          | For writing content of a block to output      |
+| nothing        | No                               | Does nothing.                                 |
+| writeallblocks | Optional, a seperator            | Writes all defined block names                |
+| loadfile       | 2 Arg, filepath and output type  | Writes generated output of given file          |
 ## Output Types
 
 **valid output types for version 0.12 is listed below**
@@ -66,3 +67,7 @@ command name and argument is needs to be seperated by a `:`
 | {nw}           | New Line               | MARKDOWN,HTML,TXT      |
 | {italic}       | Italic text begin      | MARKDOWN,HTML,TXT      |
 | {italic_end}   | Italic text end        | MARKDOWN,HTML,TXT      |
+| {code}         | Code text begin        | MARKDOWN,HTML,TXT      |
+| {code_end}     | Code text end          | MARKDOWN,HTML,TXT      |
+| {scrool}       | Scrolling text end     | HTML                   |
+| {scroll_end}   | Scorlling text end     | HTML                   |

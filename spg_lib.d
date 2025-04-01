@@ -49,13 +49,9 @@ enum LineType {
     MAGIC
 }
 
-struct Error {
-  int line_no;
-  string message;
-}
-
 const OutputType default_output_type = OutputType.TXT;
-const float __version__ = 0.12;
+const string argument_seperator = ",,";
+const float __version__ = 0.13;
 const string __author__ = "Zoda (kerem3338)";
 OutputType[string] output_type_extensions = [
    ".md": OutputType.MARKDOWN,
@@ -163,7 +159,9 @@ string replace_magics(string source,OutputType output_type) {
                 "{hr}": "---",
                 "{nw}": "\n",
                 "{italic}": "*",
-                "{italic_end}": "*"
+                "{italic_end}": "*",
+                "{code}": "```",
+                "{code_end}": "```"
             ];
             output = replace_all(source,replacements);
             break;
@@ -176,7 +174,11 @@ string replace_magics(string source,OutputType output_type) {
                 "{hr}": "<hr>",
                 "{nw}": "<br>",
                 "{italic}": "<i>",
-                "{italic_end}": "</i>"
+                "{italic_end}": "</i>",
+                "{code}": "<pre><code>",
+                "{code_end}": "</pre></code>",
+                "{scroll}": "<marquee>",
+                "{scroll_end}": "</marquee>"
             ];
             output = replace_all(source,replacements);
             break;
@@ -194,6 +196,21 @@ void check_empty_arg(string command_name, string arg, int line) {
     if (strip(arg).length == 0) {
         error(format("[At Line %d ] Command '%s' requires non-empty argument content", line + 1, command_name));
     }
+}
+
+void check_exact_arg_count(string command_name, string arg, int line, int exact_arg_count) {
+    check_empty_arg(command_name, arg, line);
+    string[] args = arg.split(argument_seperator);
+    int arg_count = args.length;
+    
+    if (arg_count != exact_arg_count) {
+        error(format("[At Line %d] Command '%s' requires exactly %d arguments, NOT %d", 
+                     line + 1, command_name, exact_arg_count, arg_count));
+    }
+}
+
+string[] get_command_args(string arg) {
+    return arg.split(argument_seperator);
 }
 
 struct Block {
@@ -225,7 +242,7 @@ class Document {
         }
 
         string command_name = command_parts[0];
-        string argument = command_parts[1];
+        string argument = command_parts[1..$].join(":");
 
 		
         switch (command_name) {
@@ -235,6 +252,23 @@ class Document {
                 current_block = argument;
 				return "";
             
+            case "loadfile":
+                check_exact_arg_count("loadfile",argument,c_line,2);
+                string[] args = get_command_args(argument);
+                string loaded_content = "";
+
+                if (!args[0].exists) line_error(format("loadfile: file not found '%s'",argument),c_line);
+                Document ext_doc = new Document(readText(args[0]));
+                OutputType doc_output_type = default_output_type;
+
+                try {
+                    doc_output_type = to!OutputType(args[1]);
+                } catch (Exception e){
+                    error(format("Unable to set output type '%s': %s",args[1],e.msg));
+                }
+
+                loaded_content = ext_doc.generate(doc_output_type);
+                return loaded_content;
             case "nothing":
                 return "";
 

@@ -95,6 +95,12 @@ string generate_from_file(OutputType output_type,string filepath) {
 
 struct ServerSettings {
 	bool list_dir = true;
+
+	OutputType force_output_type;
+	bool force_output_type_flag = false;
+
+	string force_content_type;
+	bool force_content_type_flag = false; 
 }
 
 class SPGServer {
@@ -136,6 +142,8 @@ class SPGServer {
 			string content_type = "text/plain";
 			string requested_path = request_info["path"][1..$];
 
+			OutputType output_type = default_output_type;
+			
 			if (!("path" in request_info) && !("method" in request_info)) {
 				client.close();
 				continue;
@@ -145,7 +153,14 @@ class SPGServer {
 				requested_path = "index.spg";
 			}
 
-			std.stdio.write(format("[%s] %s",request_info["method"], request_info["path"]));
+
+			if (server_settings.force_content_type_flag) content_type = server_settings.force_content_type;
+			if (server_settings.force_output_type_flag) output_type = server_settings.force_output_type;
+
+
+			std.stdio.write(format("[%s] %s <%s>",request_info["method"], request_info["path"], output_type));
+
+			
 
 			if (request_info["path"]=="/__server_info__") {
 				return_content = format(__server_info__,internet_address.addrToString(this.internet_address.addr),internet_address.port);
@@ -154,7 +169,8 @@ class SPGServer {
 				if (std_file.exists(requested_path) && std_file.isFile(requested_path)){
 					string file_ext = get_file_extension(baseName(requested_path));
 
-					OutputType output_type = default_output_type;
+					
+
 					if (file_ext in output_type_extensions){
 						output_type = output_type_extensions[file_ext];
 					}
@@ -199,7 +215,9 @@ void print_help(string run_name) {
 		Arguments:
 		--help: Prints this text and exits
 		--serve-dir: Directory to serve files
-		--port: Server Port value`);
+		--port: Server Port value
+		--output-type: Forces given resource to generated as selected output type
+		--content-type: Forces Content-Type header in HTTP Result to given input`);
 }
 
 void main(string[] args){
@@ -208,6 +226,8 @@ void main(string[] args){
 
 	bool help_text_arg = get_arg("--help",args);
 	string serve_dir_arg = get_value_arg("--serve-dir",args);
+	string output_type_arg = get_value_arg("--output-type",args);
+	string content_type_arg = get_value_arg("--content-type",args);
 
 	if (serve_dir_arg != "") {
 		serve_dir = serve_dir_arg;
@@ -226,5 +246,20 @@ void main(string[] args){
 
 
 	SPGServer spg_server = new SPGServer(new InternetAddress(port),serve_dir);
+	
+	if (output_type_arg != "") {
+		try {
+			spg_server.server_settings.force_output_type_flag = true;
+			spg_server.server_settings.force_output_type = to!OutputType(output_type_arg);
+		} catch (Exception e){
+			error(format("Unable to set output type '%s': %s",output_type_arg,e.msg));
+		}
+	}
+
+	if (content_type_arg != "") {
+		spg_server.server_settings.force_content_type_flag = true;
+		spg_server.server_settings.force_content_type = content_type_arg;
+	}
+
 	spg_server.start();
 }

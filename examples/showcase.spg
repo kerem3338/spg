@@ -4,11 +4,10 @@ SPG (Simple Page Generator) is licensed under MIT License
 *endblock:license**
 
 %{big_text}Simple Page Generator{big_text_end}
-%{italic} {bold}NOTE{bold_end} This file is only work for HTML output type. {italic_end}
 
-%{nw} {bold}
+%{nw}{bold}
 *writeblock:license**
-%{nw} {bold_end} {nw}
+%{nw}{bold_end} {nw}
 
 <b>All Blocks</b>: 
 *writeallblocks:, **
@@ -20,3 +19,15 @@ SPG (Simple Page Generator) is licensed under MIT License
 %{hr}
 %{big_text}More Information{big_text_end}
 *writeblock:__info__**
+
+%{hr}{nw}{nw}{big_text}Here is a {italic}HTML{italic_end} Document generated from another file{big_text_end}{hr}
+*loadfile:examples\test.html.spg,,HTML**
+
+
+%{hr} {scroll}I'm Moving!{scroll_end} {hr}
+
+%{nw}{bold}Some Code For You{bold_end} {code}
+print("Hello Python!");
+write("Hello D!");
+printf("Hello C!");
+%{code_end}
