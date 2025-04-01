@@ -7,7 +7,7 @@
 * Added `argument_seperator` const string to spg_lib.d
 * Added `loadfile` command.
 * Added `{code}` and `{code_end}` magics.
-* Added `{scrool}` and `{scroll_end}` magics.
+* Added `{scroll}` and `{scroll_end}` magics.
 
 ### Changed
 * SPG Server now prints output type of resource to stdout.
