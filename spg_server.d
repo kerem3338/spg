@@ -208,16 +208,16 @@ class SPGServer {
 }
 
 void print_help(string run_name) {
-	writef(`SPG Server (SPG version %.3f
+	writef(`SPG Server (SPG version %.4f)
 
-		Usage: %s [arguments]
+Usage: %s [arguments]
 
-		Arguments:
-		--help: Prints this text and exits
-		--serve-dir: Directory to serve files
-		--port: Server Port value
-		--output-type: Forces given resource to generated as selected output type
-		--content-type: Forces Content-Type header in HTTP Result to given input`);
+Arguments:
+	--help: Prints this text and exits
+	--serve-dir: Directory to serve files
+	--port: Server Port value
+	--output-type: Forces given resource to generated as selected output type
+	--content-type: Forces Content-Type header in HTTP Result to given input`,__version__,run_name);
 }
 
 void main(string[] args){

@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## Version 0.131 - 11/04/2025
+
+### Changed
+* Version format now is changed to `x.xxx` format *major.<minor-patch>*
+  * `__version__` variable changed to `0.131` in spg_lib.d
+  * all of `%.3f` format specifiers changed to `%.4f`. changed files: *spg_lib.d*, *spg_server.d*, *spg.d*
+
+### Fixed
+* formatting error inside of `print_help` function in spg_server.d is fixed.
+
 ## Version 0.13 - 02/04/2025
 
 ### Added

@@ -36,7 +36,7 @@ import std.path : stripExtension,baseName,buildPath,dirName;
 import spg_lib;
 
 void print_help(string run_name){
-	writef(`SPG version %.3f
+	writef(`SPG version %.4f
 	
 Usage: %s source [arguments]
 
@@ -78,7 +78,7 @@ void main(string[] args) {
 	}
 
 	if (version_text_arg) {
-	  writef("SPG Version %.3f\n\n%s",__version__,generate_info(OutputType.TXT));
+	  writef("SPG Version %.4f\n\n%s",__version__,generate_info(OutputType.TXT));
 	  exit(0);
 	}
 	

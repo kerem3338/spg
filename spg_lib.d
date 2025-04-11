@@ -51,7 +51,7 @@ enum LineType {
 
 const OutputType default_output_type = OutputType.TXT;
 const string argument_seperator = ",,";
-const float __version__ = 0.13;
+const float __version__ = 0.131;
 const string __author__ = "Zoda (kerem3338)";
 OutputType[string] output_type_extensions = [
    ".md": OutputType.MARKDOWN,
@@ -73,7 +73,7 @@ string[string] output_type_content_types = [
 
 const string __info__ = format(`{big_text}SPG{big_text_end}
 
-SPG Version '%.3f', {bold}Simple Page Generator{bold_end} is a simple page generation tool from Zoda (https://github.com/kerem3338)
+SPG Version '%.4f', {bold}Simple Page Generator{bold_end} is a simple page generation tool from Zoda (https://github.com/kerem3338)
 License: MIT (https://mit-license.org)`,
 	__version__);
 
