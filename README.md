@@ -25,11 +25,6 @@ spg --version
 ```shell
 make build_server
 ```
-or
-```shell
-make just_build_server
-```
-if you already builded spg executable
 
 ### Running
 simply run the server executable.

@@ -69,5 +69,5 @@ command name and argument is needs to be seperated by a `:`
 | {italic_end}   | Italic text end        | MARKDOWN,HTML,TXT      |
 | {code}         | Code text begin        | MARKDOWN,HTML,TXT      |
 | {code_end}     | Code text end          | MARKDOWN,HTML,TXT      |
-| {scrool}       | Scrolling text end     | HTML                   |
+| {scroll}       | Scrolling text end     | HTML                   |
 | {scroll_end}   | Scorlling text end     | HTML                   |
